@@ -1,0 +1,78 @@
+#Vector_12, #Vector_7 {
+    cursor: pointer;
+}
+
+#Vector_18,
+#Vector_19,
+#Vector_20,
+#Vector_21,
+#Vector_22,
+#Vector_29,
+#Vector_30 {
+  transform: translateX(-5px) translateY(8px) rotate(2deg);
+  animation: pages-shake 3s infinite alternate ease-in-out;
+}
+
+#Vector_23,
+#Vector_24,
+#Vector_25,
+#Vector_26,
+#Vector_31,
+#Vector_32 {
+  transform: translateX(8px) translateY(8px) rotate(-2deg);
+  animation: pages-shake 4s infinite alternate ease-in-out;
+}
+
+#Vector_13,
+#Vector_14,
+#Vector_15,
+#Vector_16,
+#Vector_17 {
+  transform: translateX(4px) translateY(-2px);
+  animation: pages-shake 3s infinite alternate ease-in-out;
+}
+// #6C63FF  #3F3D56 palido
+#Vector_29,
+#Vector_30 {
+  transform: rotate(3deg) translateY(15px) translateX(-10px);
+  animation: pages-shake 3s infinite alternate ease-in-out;
+}
+
+#Vector_31,
+#Vector_32 {
+  transform: rotate(1deg) translateY(5px) translateX(10px);
+  animation: pages-shake 4s infinite alternate ease-in-out;
+}
+
+#Vector_27,
+#Vector_28 {
+  transform: rotate(1deg) translateY(5px) translateX(10px);
+  animation: pages-shake 3s infinite alternate ease-in-out;
+}
+
+#Vector_7,
+#Vector_12 {
+  transform: rotate(-1deg) translateY(10px) translateX(8px);
+  animation: pages-shake 5s infinite alternate ease-in-out;
+}
+
+#Vector_10 {
+  transform: rotate(-1deg);
+  animation: pages-shake 2s infinite alternate ease-in-out;
+}
+#Vector {
+  transform: rotate(1deg);
+  animation: pages-shake 2s infinite alternate ease-in-out;
+}
+
+@keyframes pages-shake {
+  100% {
+    transform: unset;
+  }
+}
+
+@keyframes completed-task {
+  100% {
+    fill: #6c63ff;
+  }
+}
