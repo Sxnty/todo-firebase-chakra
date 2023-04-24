@@ -12,12 +12,15 @@
     "@chakra-ui/react": "^2.5.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@fontsource/montserrat": "^4.5.14",
     "dotenv": "^16.0.3",
     "framer-motion": "^10.12.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
-    "react-router-dom": "^6.10.0"
+    "react-router-dom": "^6.10.0",
+    "sass": "^1.62.0",
+    "styled-components": "^5.3.10"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
