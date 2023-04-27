@@ -11,6 +11,8 @@ import {
   Checkbox,
   Spacer,
 } from '@chakra-ui/react';
+import AsideSvg from '../components/AsideSvg/AsideSvg';
+
 const Main = styled.main`
   width: 100%;
   height: 100vh;
@@ -20,9 +22,9 @@ function TaskList() {
     <>
       <Main>
         <Grid templateColumns='1fr 6fr'>
-          <GridItem w='100%' h='100vh' p='8rem 0 0 3rem'>
-            <Flex flexDirection={'column'} height={'100%'} width={'100%'}>
-              <Box>
+          <GridItem w='100%' h='100vh' p='8rem 0 0 0'>
+            <Flex flexDirection={'column'} height={'100%'} width={'100%'} >
+              <Box pl={'3rem'}>
                 <Stack spacing={'5'}>
                   <Flex gap={'.2rem'} align={'center'}>
                     <Box
@@ -50,7 +52,9 @@ function TaskList() {
                 </Stack>
               </Box>
               <Spacer></Spacer>
-              xD
+              <Box h={'100%'}>
+                <AsideSvg />
+              </Box>
             </Flex>
           </GridItem>
           <GridItem w='100%' h='10' bg='blue.200' />

@@ -1,0 +1,25 @@
+#Aside,
+#Aside_2,
+#Aside_3,
+#Aside_4,
+#Aside_5,
+#Aside_6,
+#Aside_7,
+#Aside_8 {
+  transform: rotate(3deg) translateX(20px) translateX(-15px);
+  animation: pages-shake 8s infinite alternate ease-in-out;
+}
+#Aside_9,
+#Aside_10,
+#Aside_11,
+#Aside_12,
+#Path395 {
+  transform: rotate(-3deg) translateX(-40px) translateX(23px);
+  animation: pages-shake 7s infinite alternate ease-in-out;
+}
+#Aside_13,
+#Aside_14,
+#Aside_15 {
+    transform: rotate(-2deg) translateX(-70px) translateX(5px);
+    animation: pages-shake 8s infinite alternate ease-in-out;
+}
