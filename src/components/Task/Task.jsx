@@ -13,18 +13,19 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 import { BsThreeDots } from 'react-icons/bs';
-const Task = () => {
+
+const Task = ({ title, description, important, id, done }) => {
   return (
     <Card w={'100%'} bg={'#FFF9DE'}>
       <CardHeader>
         <Flex align={'center'}>
-          <Heading fontSize={'xl'}>Task Title</Heading>
+          <Heading fontSize={'xl'}>{title}</Heading>
           <Spacer />
           <BsThreeDots fontSize={'1.5rem'} />
         </Flex>
       </CardHeader>
       <CardBody>
-        <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae ducimus fugiat nihil? Nesciunt, molestiae corporis!.</Text>
+        <Text>{description}</Text>
       </CardBody>
       <Divider />
       <CardFooter>
@@ -34,7 +35,7 @@ const Task = () => {
             <Box bg='#FFCECE' w={'30px'} h={'30px'} borderRadius={'50%'} />
           </Box>
           <Spacer />
-          <Checkbox size='lg' colorScheme='blue' defaultChecked>
+          <Checkbox size='lg' colorScheme='blue'>
             Done
           </Checkbox>
         </Flex>
