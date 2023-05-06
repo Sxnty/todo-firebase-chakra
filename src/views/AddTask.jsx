@@ -15,12 +15,15 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import ErrorMessage from '../components/ErrorMessage/ErrorMessage';
-
+import { addTask } from '../firebase/firestore/firestoreApi';
+import { useNavigate } from 'react-router-dom';
 
 const AddTask = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
   let [title, setTitle] = useState('');
   let [description, setDescription] = useState('');
-  let [error, setError] = useState(false)
+  let [error, setError] = useState(false);
   const onTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -28,14 +31,15 @@ const AddTask = ({ isOpen, onClose }) => {
     setDescription(event.target.value);
   };
   const onSubmitHandler = () => {
-    if(!title || !description) {
-      setError(true)
+    if (!title || !description) {
+      setError(true);
     }
-  }
+    addTask({ title, description, important: false });
+  };
   const closeModal = () => {
-    onClose()
-    setError(false)
-  }
+    onClose();
+    setError(false);
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -57,10 +61,19 @@ const AddTask = ({ isOpen, onClose }) => {
                 onChange={onDescriptionChange}
               />
             </FormControl>
-            <Button colorScheme='twitter' variant='outline' w={'100%'} onClick={onSubmitHandler}>
+            <Button
+              colorScheme='twitter'
+              variant='outline'
+              w={'100%'}
+              onClick={onSubmitHandler}
+            >
               Add
             </Button>
-          {error ? <ErrorMessage text={'You need to provide a title and description.'}/> : null}
+            {error ? (
+              <ErrorMessage
+                text={'You need to provide a title and description.'}
+              />
+            ) : null}
           </Stack>
         </ModalBody>
         <ModalFooter>
