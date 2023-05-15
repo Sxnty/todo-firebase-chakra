@@ -13,7 +13,6 @@ export const getTasks = async () => {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log(result);
     return { code: 200, msg: result };
   } catch (error) {
     console.error(error);
@@ -36,8 +35,9 @@ export const addTask = async ({ title, description, important }) => {
     const task = { title, description, important, done:false };
     validateTask(task);
     let tasksRef = collection(db, 'tasks');
-    await addDoc(tasksRef, task);
-    return { code: 200, msg: 'Task added' };
+    let result = await addDoc(tasksRef, task);
+    console.log(result.id, 'id')
+    return { code: 200, msg: 'Task added', id:result.id  };
   } catch (error) {
     console.error(error);
     return { code: 500, msg: `Error adding the task: ${error}` };
