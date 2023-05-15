@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -16,10 +16,10 @@ import {
 } from '@chakra-ui/react';
 import ErrorMessage from '../components/ErrorMessage/ErrorMessage';
 import { addTask } from '../firebase/firestore/firestoreApi';
-import { useNavigate } from 'react-router-dom';
+import { TasksContext } from '../states/TasksContext';
 
 const AddTask = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
+  const { tasks, setTasks } = useContext(TasksContext);
 
   let [title, setTitle] = useState('');
   let [description, setDescription] = useState('');
@@ -30,12 +30,19 @@ const AddTask = ({ isOpen, onClose }) => {
   const onDescriptionChange = (event) => {
     setDescription(event.target.value);
   };
-  const onSubmitHandler = () => {
+  const onSubmitHandler = async () => {
     if (!title || !description) {
       setError(true);
     }
-    addTask({ title, description, important: false });
+    let newTask = { title, description, important:false, id: null };
+    let result = await addTask(newTask);
+    if (result.code === 200 && result) {
+      newTask.id = result.id;
+    }
+    setTasks([...tasks, newTask]);
+    localStorage.setItem('tasks', JSON.stringify([...tasks, newTask]));
   };
+
   const closeModal = () => {
     onClose();
     setError(false);
