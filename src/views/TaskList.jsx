@@ -12,9 +12,10 @@ import {
   Spacer,
 } from '@chakra-ui/react';
 import AsideSvg from '../components/AsideSvg/AsideSvg';
-import Task from '../components/Task/Task';
+import Task from '../components/Task/Task'; 
 import { getTasks } from '../firebase/firestore/firestoreApi';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { TasksContext } from '../states/TasksContext';
 
 const Main = styled.main`
   width: 100%;
@@ -22,17 +23,29 @@ const Main = styled.main`
 `;
 
 function TaskList() {
-  const [tasks, setTasks] = useState([]);
-
+  const { tasks, setTasks } = useContext(TasksContext);
   useEffect(() => {
     const fetchData = async () => {
+      console.log('fetch');
       const response = await getTasks();
+      console.log(response);
       if (response.code === 200) {
+        console.log(response.msg.length, 'tamaño cargado en memoria');
         setTasks(response.msg);
+        localStorage.setItem('tasks', JSON.stringify(response.msg));
       }
     };
-    fetchData();
-  }, []);
+  
+    const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+  
+    if (!storedTasks || storedTasks.length === 0) {
+      fetchData();
+    } else {
+      setTasks(storedTasks);
+    }
+  }, [setTasks]);
+  
+  
 
   return (
     <>
@@ -80,7 +93,7 @@ function TaskList() {
               placeContent={'center'}
               alignContent={'center'}
             >
-              {tasks && tasks.length > 1
+              {tasks && tasks.length > 0
                 ? tasks.map(({ title, description, important, id, done }) => {
                     return (
                       <Task
