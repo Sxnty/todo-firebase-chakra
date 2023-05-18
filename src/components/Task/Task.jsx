@@ -20,16 +20,24 @@ import {
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { updateStatus } from '../../firebase/firestore/firestoreApi';
-
+import toast, { Toaster } from 'react-hot-toast';
 const Task = ({ title, description, important, id, done }) => {
   const [isDone, setIsDone] = useState(done);
 
   const handleCheckboxChange = async (e) => {
+    const toastId = toast.loading('Loading...');
     const isChecked = e.target.checked;
     setIsDone(isChecked);
     await updateStatus(id, isChecked);
+    if (updateStatus) {
+      toast.success('Task updated!', {
+        duration: 2000,
+        id: toastId,
+      });
+    }
+    
     const storedTasks = JSON.parse(localStorage.getItem('tasks'));
-    const updatedTasks = storedTasks.map(task => {
+    const updatedTasks = storedTasks.map((task) => {
       if (task.id === id) {
         return { ...task, done: isChecked };
       }
@@ -37,7 +45,6 @@ const Task = ({ title, description, important, id, done }) => {
     });
     localStorage.setItem('tasks', JSON.stringify(updatedTasks));
   };
-  
 
   return (
     <Card w={'100%'} bg={!isDone ? '#FFF9DE' : '#fff9de21'}>
@@ -97,6 +104,7 @@ const Task = ({ title, description, important, id, done }) => {
           </Checkbox>
         </Flex>
       </CardFooter>
+      <Toaster />
     </Card>
   );
 };
