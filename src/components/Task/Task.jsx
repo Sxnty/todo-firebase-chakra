@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardBody,
@@ -19,25 +19,51 @@ import {
 } from '@chakra-ui/react';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import { updateStatus } from '../../firebase/firestore/firestoreApi';
 
 const Task = ({ title, description, important, id, done }) => {
+  const [isDone, setIsDone] = useState(done);
+
+  const handleCheckboxChange = async (e) => {
+    const isChecked = e.target.checked;
+    setIsDone(isChecked);
+    await updateStatus(id, isChecked);
+    const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+    const updatedTasks = storedTasks.map(task => {
+      if (task.id === id) {
+        return { ...task, done: isChecked };
+      }
+      return task;
+    });
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+  };
+  
+
   return (
-    <Card w={'100%'} bg={'#FFF9DE'}>
+    <Card w={'100%'} bg={!isDone ? '#FFF9DE' : '#fff9de21'}>
       <CardHeader>
         <Flex align={'center'}>
-          <Heading fontSize={'xl'}>{title}</Heading>
+          {!isDone ? (
+            <>
+              <Heading fontSize={'xl'}>{title}</Heading>
+            </>
+          ) : (
+            <Heading as='del' fontSize={'xl'}>
+              {title}
+            </Heading>
+          )}
           <Spacer />
           <Menu>
-            <MenuButton as={Button} bg={'#FFF9DE'}>
+            <MenuButton as={Button} bg={'transparent'}>
               <HiDotsHorizontal fontSize={'1.5rem'} />
             </MenuButton>
             <MenuList>
               <MenuItem>
                 <Text pr={'.5rem'}>Edit</Text>
-                <AiFillEdit/>
+                <AiFillEdit />
               </MenuItem>
               <MenuItem>
-              <Text pr={'.5rem'}>Delete</Text>
+                <Text pr={'.5rem'}>Delete</Text>
                 <AiFillDelete />
               </MenuItem>
             </MenuList>
@@ -55,7 +81,18 @@ const Task = ({ title, description, important, id, done }) => {
             <Box bg='#FFCECE' w={'30px'} h={'30px'} borderRadius={'50%'} />
           </Box>
           <Spacer />
-          <Checkbox size='lg' colorScheme='blue'>
+          <Checkbox
+            size='lg'
+            colorScheme='blue'
+            /*             onChange={(e) => {
+              if (e.target.checked) {
+                done = true;
+                console.log(done);
+              }
+            }} */
+            isChecked={isDone}
+            onChange={handleCheckboxChange}
+          >
             Done
           </Checkbox>
         </Flex>
