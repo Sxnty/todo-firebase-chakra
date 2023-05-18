@@ -12,9 +12,9 @@ import {
   Spacer,
 } from '@chakra-ui/react';
 import AsideSvg from '../components/AsideSvg/AsideSvg';
-import Task from '../components/Task/Task'; 
+import Task from '../components/Task/Task';
 import { getTasks } from '../firebase/firestore/firestoreApi';
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { TasksContext } from '../states/TasksContext';
 
 const Main = styled.main`
@@ -35,18 +35,15 @@ function TaskList() {
         localStorage.setItem('tasks', JSON.stringify(response.msg));
       }
     };
-  
+
     const storedTasks = JSON.parse(localStorage.getItem('tasks'));
-  
+
     if (!storedTasks || storedTasks.length === 0) {
       fetchData();
     } else {
       setTasks(storedTasks);
     }
   }, [setTasks]);
-  
-  
-
   return (
     <>
       <Main>
@@ -88,13 +85,14 @@ function TaskList() {
           </GridItem>
           <GridItem w='100%' h='100vh' p='2rem' pt={'8rem'}>
             <Grid
-              templateColumns={'1fr 1fr'}
+              templateColumns={'1fr 1fr 1fr 1fr'}
               gap={'1rem'}
               placeContent={'center'}
               alignContent={'center'}
             >
               {tasks && tasks.length > 0
                 ? tasks.map(({ title, description, important, id, done }) => {
+                  console.log(title, done)
                     return (
                       <Task
                         title={title}
@@ -102,6 +100,7 @@ function TaskList() {
                         important={important}
                         id={id}
                         key={id}
+                        done={done}
                       />
                     );
                   })
