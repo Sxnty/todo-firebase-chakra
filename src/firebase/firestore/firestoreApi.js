@@ -2,6 +2,9 @@ import {
   collection,
   getDocs,
   addDoc,
+  doc,
+  getDoc,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -21,25 +24,50 @@ export const getTasks = async () => {
 };
 
 const validateTask = (task) => {
-  const { title, description} = task;
+  const { title, description } = task;
   if (!title || !description) {
-    throw new Error(
-      'Need to provide all parameters to add the task'
-    );
+    throw new Error('Need to provide all parameters to add the task');
   }
 };
 
 export const addTask = async ({ title, description, important }) => {
   try {
-    important = important ?? false
-    const task = { title, description, important, done:false };
+    important = important ?? false;
+    const task = { title, description, important, done: false };
     validateTask(task);
     let tasksRef = collection(db, 'tasks');
     let result = await addDoc(tasksRef, task);
-    console.log(result.id, 'id')
-    return { code: 200, msg: 'Task added', id:result.id  };
+    console.log(result.id, 'id');
+    return { code: 200, msg: 'Task added', id: result.id };
   } catch (error) {
     console.error(error);
     return { code: 500, msg: `Error adding the task: ${error}` };
+  }
+};
+
+export const updateStatus = async (id, done) => {
+  try {
+    console.log(id, done)
+    if (!id || done === undefined) {
+      throw new Error('Needs to provide id and done parameter');
+    }
+    if (typeof done !== 'boolean') {
+      throw new Error('Done parameter needs to be a boolean');
+    }
+    let tasksRef = collection(db, 'tasks');
+    let taskDocRef = doc(tasksRef, id);
+    const taskDocSnapshot = await getDoc(taskDocRef);
+    if (taskDocSnapshot.exists()) {
+      await updateDoc(taskDocRef, {
+        done,
+      });
+      console.log('task updated!');
+      return { code: 200, msg: 'Task updated successfully!' };
+    } else {
+      throw new Error('Document not found');
+    }
+  } catch (error) {
+    console.log(error);
+    return { code: 500, msg: `updating status: ${error}` };
   }
 };
