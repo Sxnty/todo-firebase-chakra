@@ -33,14 +33,15 @@ const AddTask = ({ isOpen, onClose }) => {
   const onSubmitHandler = async () => {
     if (!title || !description) {
       setError(true);
+    } else {
+      let newTask = { title, description, important: false, id: null };
+      let result = await addTask(newTask);
+      if (result.code === 200 && result) {
+        newTask.id = result.id;
+      }
+      setTasks([...tasks, newTask]);
+      localStorage.setItem('tasks', JSON.stringify([...tasks, newTask]));
     }
-    let newTask = { title, description, important:false, id: null };
-    let result = await addTask(newTask);
-    if (result.code === 200 && result) {
-      newTask.id = result.id;
-    }
-    setTasks([...tasks, newTask]);
-    localStorage.setItem('tasks', JSON.stringify([...tasks, newTask]));
   };
 
   const closeModal = () => {
