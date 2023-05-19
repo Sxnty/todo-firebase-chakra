@@ -80,7 +80,7 @@ export const deleteTask = async (id) => {
     }
     let tasksRef = collection(db, 'tasks');
     let taskDocRef = doc(tasksRef, id);
-    let taskDocSnapshot = await getDoc(taskDocRef)
+    let taskDocSnapshot = await getDoc(taskDocRef);
     if (!taskDocSnapshot.exists()) {
       throw new Error('Document not found');
     }
@@ -89,6 +89,25 @@ export const deleteTask = async (id) => {
       code: 200,
       msg: 'Task deleted successfully!',
     };
+  } catch (error) {
+    console.error(error);
+    return { code: 500, msg: error };
+  }
+};
+export const editTask = async (id, { title, description }) => {
+  try {
+    let tasksRef = collection(db, 'tasks');
+    let taskDocRef = doc(tasksRef, id);
+    let taskDocSnapshot = await getDoc(taskDocRef);
+    if (!taskDocSnapshot.exists()) {
+      throw new Error('Document not found');
+    }
+    await updateDoc(taskDocRef, {
+      title,
+      description,
+    });
+    console.log('task updated successfuly');
+    return { code: 200, msg: 'task updated successfully' };
   } catch (error) {
     console.error(error);
     return { code: 500, msg: error };
