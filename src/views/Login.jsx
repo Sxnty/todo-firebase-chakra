@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Grid,
   GridItem,
@@ -17,6 +17,8 @@ import {
 import { FcGoogle } from 'react-icons/fc';
 import styled from 'styled-components';
 import LoginSvg from '../components/LoginSvg/LoginSvg';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../states/AuthContext';
 
 const Main = styled.main`
   display: flex;
@@ -27,6 +29,19 @@ const Main = styled.main`
 `;
 
 function Login() {
+  const { loginWithGoogle, userLoged, userLoading } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    await loginWithGoogle();
+    navigate("/");
+  };
+
+  if (userLoged) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <Main>
       <Grid
@@ -73,6 +88,7 @@ function Login() {
                   variant='outline'
                   w='100%'
                   mt='1rem'
+                  onClick={handleLogin}
                 >
                   Log in with Google.
                 </Button>
@@ -80,7 +96,14 @@ function Login() {
             </Center>
           </Flex>
         </GridItem>
-        <GridItem w='100%' h='100%' padding='1rem' bg={'#FFCECE'} borderTopRightRadius={'3xl'} borderBottomRightRadius={'3xl'}>
+        <GridItem
+          w='100%'
+          h='100%'
+          padding='1rem'
+          bg={'#FFCECE'}
+          borderTopRightRadius={'3xl'}
+          borderBottomRightRadius={'3xl'}
+        >
           <Flex
             w='100%'
             h='100%'
