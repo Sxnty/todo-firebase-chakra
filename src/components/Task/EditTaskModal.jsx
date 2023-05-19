@@ -14,6 +14,8 @@ import {
   Input,
   Textarea,
 } from '@chakra-ui/react';
+import toast from 'react-hot-toast';
+
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import { editTask } from '../../firebase/firestore/firestoreApi';
 import { TasksContext } from '../../states/TasksContext';
@@ -33,17 +35,28 @@ const EditTaskModal = ({ isOpen, onClose, title, description, id }) => {
     if (!titleValue || !descriptionValue) {
       setError(true);
     } else {
+      const toastId = toast.loading('Loading...');
       let updatedTask = {
         title: titleValue,
         description: descriptionValue,
       };
       const result = await editTask(id, updatedTask);
-      const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-      const taskIndex = storedTasks.findIndex((task) => task.id === id);
-      if (taskIndex !== -1) {
-        storedTasks[taskIndex] = { ...storedTasks[taskIndex], ...updatedTask };
-        setTasks(storedTasks);
-        localStorage.setItem('tasks', JSON.stringify(storedTasks));
+      if (result) {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const taskIndex = storedTasks.findIndex((task) => task.id === id);
+        if (taskIndex !== -1) {
+          storedTasks[taskIndex] = {
+            ...storedTasks[taskIndex],
+            ...updatedTask,
+          };
+          setTasks(storedTasks);
+          localStorage.setItem('tasks', JSON.stringify(storedTasks));
+        }
+        toast.success('Task edited!', {
+          duration: 2000,
+          id: toastId,
+        });
+        onClose()
       }
     }
   };
