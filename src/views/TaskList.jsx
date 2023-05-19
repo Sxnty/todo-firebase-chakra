@@ -10,12 +10,15 @@ import {
   Text,
   Checkbox,
   Spacer,
+  Button,
 } from '@chakra-ui/react';
 import AsideSvg from '../components/AsideSvg/AsideSvg';
 import Task from '../components/Task/Task';
 import { getTasks } from '../firebase/firestore/firestoreApi';
 import { useEffect, useContext } from 'react';
 import { TasksContext } from '../states/TasksContext';
+import { AiOutlineLogout } from 'react-icons/ai';
+import { AuthContext } from '../states/AuthContext';
 
 const Main = styled.main`
   width: 100%;
@@ -24,13 +27,15 @@ const Main = styled.main`
 
 function TaskList() {
   const { tasks, setTasks } = useContext(TasksContext);
+  const {logOut, setUserLoading} = useContext(AuthContext)
   useEffect(() => {
     const fetchData = async () => {
+      setUserLoading(true)
       console.log('fetch');
       const response = await getTasks();
       console.log(response);
       if (response.code === 200) {
-        console.log(response.msg.length, 'tamaño cargado en memoria');
+      setUserLoading(false)
         setTasks(response.msg);
         localStorage.setItem('tasks', JSON.stringify(response.msg));
       }
@@ -44,6 +49,12 @@ function TaskList() {
       setTasks(storedTasks);
     }
   }, [setTasks]);
+
+  const logOutConfirm = async() => {
+    localStorage.removeItem('tasks')
+    await logOut()
+  }
+
   return (
     <>
       <Main>
@@ -77,10 +88,16 @@ function TaskList() {
                   </Checkbox>
                 </Stack>
               </Box>
-              <Spacer></Spacer>
-              <Box h={'100%'}>
-                <AsideSvg />
-              </Box>
+              <Center w={'100%'} p={'1rem'}>
+                <Button
+                  leftIcon={<AiOutlineLogout />}
+                  variant='outline'
+                  w={'100%'}
+                  onClick={logOutConfirm}
+                >
+                  Log out
+                </Button>
+              </Center>
             </Flex>
           </GridItem>
           <GridItem w='100%' h='100vh' p='2rem' pt={'8rem'}>
@@ -92,7 +109,6 @@ function TaskList() {
             >
               {tasks && tasks.length > 0
                 ? tasks.map(({ title, description, important, id, done }) => {
-                  console.log(title, done)
                     return (
                       <Task
                         title={title}
