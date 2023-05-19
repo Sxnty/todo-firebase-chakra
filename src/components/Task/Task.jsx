@@ -22,13 +22,29 @@ import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { updateStatus } from '../../firebase/firestore/firestoreApi';
 import toast, { Toaster } from 'react-hot-toast';
 import DeleteTaskModal from './DeleteTaskModal';
+import EditTaskModal from './EditTaskModal';
 
 const Task = ({ title, description, important, id, done }) => {
   const [isDone, setIsDone] = useState(done);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
-  const onOpen = () => setIsOpen(true);
+  const [modalData, setModalData] = useState({
+    deleteModalOpen: false,
+    editModalOpen: false,
+  });
+
+  const openModal = (modalName) => {
+    setModalData((prevData) => ({
+      ...prevData,
+      [modalName]: true,
+    }));
+  };
+
+  const closeModal = (modalName) => {
+    setModalData((prevData) => ({
+      ...prevData,
+      [modalName]: false,
+    }));
+  };
 
   const handleCheckboxChange = async (e) => {
     const toastId = toast.loading('Loading...');
@@ -71,17 +87,27 @@ const Task = ({ title, description, important, id, done }) => {
               <HiDotsHorizontal fontSize={'1.5rem'} />
             </MenuButton>
             <MenuList>
-              <MenuItem>
+              <MenuItem onClick={() => openModal('editModalOpen')}>
                 <Text pr={'.5rem'}>Edit</Text>
                 <AiFillEdit />
+                <EditTaskModal
+                  isOpen={modalData.editModalOpen}
+                  onClose={() => closeModal('editModalOpen')}
+                  title={title}
+                  description={description}
+                  id={id}
+                />
               </MenuItem>
-              <MenuItem onClick={onOpen}>
-                <Text pr={'.5rem'}>
-                  Delete
-                </Text>
+              <MenuItem onClick={() => openModal('deleteModalOpen')}>
+                <Text pr={'.5rem'}>Delete</Text>
                 <AiFillDelete />
-                <DeleteTaskModal isOpen={isOpen} onClose={onClose} title={title} id={id}/>
               </MenuItem>
+              <DeleteTaskModal
+                isOpen={modalData.deleteModalOpen}
+                onClose={() => closeModal('deleteModalOpen')}
+                title={title}
+                id={id}
+              />
             </MenuList>
           </Menu>
         </Flex>
