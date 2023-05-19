@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   updateDoc,
+  deleteDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -47,7 +48,7 @@ export const addTask = async ({ title, description, important }) => {
 
 export const updateStatus = async (id, done) => {
   try {
-    console.log(id, done)
+    console.log(id, done);
     if (!id || done === undefined) {
       throw new Error('Needs to provide id and done parameter');
     }
@@ -69,5 +70,27 @@ export const updateStatus = async (id, done) => {
   } catch (error) {
     console.log(error);
     return { code: 500, msg: `updating status: ${error}` };
+  }
+};
+
+export const deleteTask = async (id) => {
+  try {
+    if (!id) {
+      throw new Error('Need to provide an id.');
+    }
+    let tasksRef = collection(db, 'tasks');
+    let taskDocRef = doc(tasksRef, id);
+    let taskDocSnapshot = await getDoc(taskDocRef)
+    if (!taskDocSnapshot.exists()) {
+      throw new Error('Document not found');
+    }
+    const deletedTask = await deleteDoc(taskDocRef);
+    return {
+      code: 200,
+      msg: 'Task deleted successfully!',
+    };
+  } catch (error) {
+    console.error(error);
+    return { code: 500, msg: error };
   }
 };
