@@ -21,8 +21,14 @@ import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { updateStatus } from '../../firebase/firestore/firestoreApi';
 import toast, { Toaster } from 'react-hot-toast';
+import DeleteTaskModal from './DeleteTaskModal';
+
 const Task = ({ title, description, important, id, done }) => {
   const [isDone, setIsDone] = useState(done);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
+  const onOpen = () => setIsOpen(true);
 
   const handleCheckboxChange = async (e) => {
     const toastId = toast.loading('Loading...');
@@ -35,7 +41,7 @@ const Task = ({ title, description, important, id, done }) => {
         id: toastId,
       });
     }
-    
+
     const storedTasks = JSON.parse(localStorage.getItem('tasks'));
     const updatedTasks = storedTasks.map((task) => {
       if (task.id === id) {
@@ -69,9 +75,12 @@ const Task = ({ title, description, important, id, done }) => {
                 <Text pr={'.5rem'}>Edit</Text>
                 <AiFillEdit />
               </MenuItem>
-              <MenuItem>
-                <Text pr={'.5rem'}>Delete</Text>
+              <MenuItem onClick={onOpen}>
+                <Text pr={'.5rem'}>
+                  Delete
+                </Text>
                 <AiFillDelete />
+                <DeleteTaskModal isOpen={isOpen} onClose={onClose} title={title} id={id}/>
               </MenuItem>
             </MenuList>
           </Menu>
